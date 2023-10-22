@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "351738810212",
+    "project_id": "challenge-as",
+    "storage_bucket": "challenge-as.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:351738810212:android:fa465120e76ca9ce91f471",
+        "android_client_info": {
+          "package_name": "com.example.auth_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDAsBNkepj9D0s-sX8xStN4w8KqSRrW62g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
