@@ -10,6 +10,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 
+import 'package:multi_dropdown/enum/app_enums.dart';
+import 'package:multi_dropdown/models/chip_config.dart';
+import 'package:multi_dropdown/models/value_item.dart';
+import 'package:multi_dropdown/multiselect_dropdown.dart';
+
 import '../utils/color_utils.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -27,9 +32,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController _lastNameTextController = TextEditingController();
   TextEditingController _locationNameTextController = TextEditingController();
   TextEditingController _ageTextController = TextEditingController();
-  TextEditingController _programTextController = TextEditingController();
   TextEditingController _bioTextController = TextEditingController();
-  TextEditingController _interestsTextController = TextEditingController();
+  MultiSelectController _interestcontroller = MultiSelectController();
+  MultiSelectController _programController = MultiSelectController();
+
   _imgFromCamera() async {
     try {
       final imageTemp = await ImagePicker()
@@ -233,13 +239,60 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 const SizedBox(
                   height: 20,
                 ),
-                reusableTextField("Programming languages known",
-                    Icons.code_outlined, false, _programTextController),
+                MultiSelectDropDown(
+                  showClearIcon: true,
+                  controller: _programController,
+                  onOptionSelected: (options) {
+                    debugPrint(options.toString());
+                  },
+                  options: const <ValueItem>[
+                    ValueItem(label: 'Python', value: '1'),
+                    ValueItem(label: 'JavaScript', value: '2'),
+                    ValueItem(label: 'Java', value: '3'),
+                    ValueItem(label: 'C++', value: '4'),
+                    ValueItem(label: 'Ruby', value: '5'),
+                    ValueItem(label: 'Swift', value: '6'),
+                    ValueItem(label: 'PHP', value: '7'),
+                    ValueItem(label: 'C#', value: '8'),
+                    ValueItem(label: 'Go', value: '9'),
+                    ValueItem(label: 'Rust', value: '10'),
+                  ],
+                  maxItems: 5,
+                  selectionType: SelectionType.multi,
+                  chipConfig: const ChipConfig(wrapType: WrapType.wrap),
+                  dropdownHeight: 300,
+                  optionTextStyle: const TextStyle(fontSize: 16),
+                  selectedOptionIcon: const Icon(Icons.check_circle),
+                ),
                 const SizedBox(
                   height: 20,
                 ),
-                reusableTextField("Enter Interests", Icons.interests_outlined,
-                    false, _interestsTextController),
+                MultiSelectDropDown(
+                  showClearIcon: true,
+                  controller: _interestcontroller,
+                  onOptionSelected: (options) {
+                    debugPrint(options.toString());
+                  },
+                  options: const <ValueItem>[
+                    ValueItem(label: 'Reading', value: '1'),
+                    ValueItem(label: 'Cooking and Baking', value: '2'),
+                    ValueItem(label: 'Sports', value: '3'),
+                    ValueItem(label: 'Gardening', value: '4'),
+                    ValueItem(label: 'Painting and Drawing', value: '5'),
+                    ValueItem(
+                        label: 'Hiking and Outdoor Activities', value: '6'),
+                    ValueItem(label: 'Music', value: '7'),
+                    ValueItem(label: 'Photography', value: '8'),
+                    ValueItem(label: 'Board Games and Puzzles', value: '9'),
+                    ValueItem(label: 'Collecting', value: '10'),
+                  ],
+                  maxItems: 5,
+                  selectionType: SelectionType.multi,
+                  chipConfig: const ChipConfig(wrapType: WrapType.wrap),
+                  dropdownHeight: 300,
+                  optionTextStyle: const TextStyle(fontSize: 16),
+                  selectedOptionIcon: const Icon(Icons.check_circle),
+                ),
                 const SizedBox(
                   height: 20,
                 ),
@@ -254,7 +307,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   height: 20,
                 ),
                 firebaseUIButton(context, "Sign Up", () async {
-                  FirebaseAuth.instance
+                  await FirebaseAuth.instance
                       .createUserWithEmailAndPassword(
                           email: _emailTextController.text,
                           password: _passwordTextController.text)
@@ -273,19 +326,35 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     print('UPLOADED TO STORAGE');
                   });
                   final url = await ref.getDownloadURL();
+                  final interestsList = [];
+                  _interestcontroller.selectedOptions.forEach((element) {
+                    // print(element.label);
+                    interestsList.add(element.label);
+                  });
+                  final programList = [];
+                  _programController.selectedOptions.forEach((element) {
+                    // print(element.label);
+                    programList.add(element.label);
+                  });
                   Map<String, dynamic> map = {
                     'first_name': _firstNameTextController.text,
                     'last_name': _lastNameTextController.text,
+                    'email': _emailTextController.text,
+                    'uid': FirebaseAuth.instance.currentUser!.uid,
                     'image_url': url,
                     'location': _locationNameTextController.text,
                     'age': _ageTextController.text,
                     'gender': selectedGender,
-                    'programming_languages_known': _programTextController.text,
+                    'programming_languages_known': programList,
                     'bio': _bioTextController.text,
-                    'interests': _interestsTextController.text,
+                    'interests': interestsList,
                   };
                   print(map);
-                  await database.child('Users').child(user.uid).set(map).then(
+                  await database
+                      .child('Users')
+                      .child(FirebaseAuth.instance.currentUser!.uid)
+                      .set(map)
+                      .then(
                     (value) {
                       Navigator.pushReplacement(
                         context,
