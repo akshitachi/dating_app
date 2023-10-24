@@ -69,6 +69,11 @@ class DataBaseService {
           .child(useruid)
           .child('matches')
           .set({userId: true});
+      await database
+          .child('Users')
+          .child(userId)
+          .child('matches')
+          .set({useruid: true});
     }
     print(result);
   }
