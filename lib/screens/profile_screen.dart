@@ -160,7 +160,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                             ),
                           )
-                        : SizedBox()
+                        : SizedBox(),
+                    widget.uid == FirebaseAuth.instance.currentUser!.uid
+                        ? SizedBox()
+                        : buildButtons(context, widget.uid),
                   ],
                 ),
               ),
@@ -175,3 +178,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
         });
   }
 }
+
+Widget buildButtons(BuildContext context, userId) => Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        ElevatedButton(
+          onPressed: () async {
+//swipe to next user
+            await DataBaseService().unliked(userId);
+            print('Done');
+          },
+          child: Icon(
+            Icons.clear,
+            color: Colors.red,
+            size: 50,
+          ),
+        ),
+        ElevatedButton(
+          onPressed: () async {
+            await DataBaseService().liked(userId);
+            print('Done');
+          },
+          child: Icon(
+            Icons.favorite,
+            color: Colors.greenAccent,
+            size: 50,
+          ),
+        ),
+      ],
+    );
