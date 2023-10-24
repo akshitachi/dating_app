@@ -1,9 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:auth_app/screens/match_tile.dart';
-import 'package:auth_app/screens/profile_screen.dart';
 import 'package:auth_app/utils/database.dart';
-import 'package:auth_app/widgets/message_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
