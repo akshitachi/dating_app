@@ -1,6 +1,5 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import 'package:auth_app/database/user.dart';
 import 'package:auth_app/screens/profile_screen.dart';
 import 'package:auth_app/screens/signin_screen.dart';
 import 'package:auth_app/utils/database.dart';
