@@ -52,6 +52,45 @@ class DataBaseService {
         .child(useruid)
         .child('liked')
         .set({userId: true});
+    var result = await database
+        .child('Users')
+        .child(userId)
+        .child('liked')
+        .child(useruid)
+        .get()
+        .then((data) => data.value);
+    if (result == true) {
+      await database
+          .child('Chats')
+          .child(userId + useruid)
+          .set({'user1': userId, 'user2': useruid, 'messages': []});
+      await database
+          .child('Users')
+          .child(useruid)
+          .child('matches')
+          .set({userId: true});
+    }
+    print(result);
+  }
+
+  Future getMatches() async {
+    var result = await database
+        .child('Users')
+        .child(FirebaseAuth.instance.currentUser!.uid)
+        .child('matches')
+        .get()
+        .then((value) => value.value);
+    print(result);
+    return result;
+  }
+
+  Future getUserIdfromChat(String chatId) async {
+    var result = await database
+        .child('Chats')
+        .child(chatId)
+        .get()
+        .then((value) => value.value);
+    return result;
   }
 
   Future unliked(String userId) async {
@@ -68,5 +107,10 @@ class DataBaseService {
         .child('liked')
         .child(userId)
         .remove();
+  }
+
+  Future getChatsforUser() async {
+    var result = await database.child('Chats').get().then((data) => data.value);
+    return result;
   }
 }

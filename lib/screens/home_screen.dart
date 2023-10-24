@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:auth_app/screens/matches_screen.dart';
+import 'package:auth_app/screens/message_screen.dart';
 import 'package:auth_app/screens/profile_screen.dart';
 import 'package:auth_app/screens/signin_screen.dart';
 import 'package:auth_app/utils/database.dart';
@@ -44,6 +46,43 @@ class _HomeScreenState extends State<HomeScreen> {
                       style: TextStyle(color: Colors.white),
                     ),
                     backgroundColor: Colors.purpleAccent,
+                    actions: [
+                      Row(
+                        children: [
+                          InkWell(
+                            splashFactory: NoSplash.splashFactory,
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => MatchesScreen(),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(8),
+                              child: Icon(Icons.man),
+                            ),
+                          ),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.1,
+                          ),
+                          InkWell(
+                            splashFactory: NoSplash.splashFactory,
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => MessageScreen(),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(8),
+                              child: Icon(Icons.chat),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                   drawer: Drawer(
                     child: SingleChildScrollView(

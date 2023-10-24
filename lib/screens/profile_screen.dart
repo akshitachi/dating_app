@@ -2,6 +2,7 @@
 
 import 'package:auth_app/screens/edit_profile.dart';
 import 'package:auth_app/utils/database.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -129,35 +130,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         )
                       ],
                     ),
-                    InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => EditProfile(),
-                          ),
-                        );
-                      },
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        padding: EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          border: Border.all(
-                              color: Colors.purpleAccent, width: 0.5),
-                        ),
-                        child: Center(
-                          child: Text(
-                            "Edit Profile",
-                            style: TextStyle(
-                              fontFamily: "Roboto",
-                              fontSize: 18,
-                              fontWeight: FontWeight.w400,
+                    widget.uid == FirebaseAuth.instance.currentUser!.uid
+                        ? InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => EditProfile(),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              width: MediaQuery.of(context).size.width,
+                              padding: EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                border: Border.all(
+                                    color: Colors.purpleAccent, width: 0.5),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  "Edit Profile",
+                                  style: TextStyle(
+                                    fontFamily: "Roboto",
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      ),
-                    )
+                          )
+                        : SizedBox()
                   ],
                 ),
               ),
