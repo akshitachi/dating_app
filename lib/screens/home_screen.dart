@@ -1,7 +1,10 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:auth_app/database/user.dart';
 import 'package:auth_app/screens/profile_screen.dart';
 import 'package:auth_app/screens/signin_screen.dart';
+import 'package:auth_app/utils/database.dart';
+import 'package:auth_app/widgets/tinder_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
@@ -16,26 +19,101 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text('Dating App'),
-          backgroundColor: Colors.purpleAccent,
-        ),
-        drawer: Drawer(
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                buildMenuItems(context),
-              ],
-            ),
-          ),
-        ),
-        body: Column(
-          children: [],
-        ));
+    Map userData = {};
+    return FutureBuilder(
+        future: DataBaseService().getFirstUser(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            var snapshotData = snapshot.data;
+            (snapshotData as Map).forEach((key, value) {
+              userData = value;
+            });
+
+            return Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.red.shade200, Colors.black],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+              ),
+              child: Scaffold(
+                  backgroundColor: Colors.transparent,
+                  appBar: AppBar(
+                    title: Text(
+                      'Dating App',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    backgroundColor: Colors.purpleAccent,
+                  ),
+                  drawer: Drawer(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          buildMenuItems(context),
+                        ],
+                      ),
+                    ),
+                  ),
+                  body: SafeArea(
+                    child: Container(
+                      padding: EdgeInsets.all(16),
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: TinderCard(
+                              user: userData,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 16,
+                          ),
+                          buildButtons(context, userData['uid']),
+                        ],
+                      ),
+                    ),
+                  )),
+            );
+          } else {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        });
   }
 }
+
+Widget buildButtons(BuildContext context, userId) => Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        ElevatedButton(
+          onPressed: () async {
+//swipe to next user
+            await DataBaseService().unliked(userId);
+            print('Done');
+          },
+          child: Icon(
+            Icons.clear,
+            color: Colors.red,
+            size: 50,
+          ),
+        ),
+        ElevatedButton(
+          onPressed: () async {
+            await DataBaseService().liked(userId);
+            print('Done');
+          },
+          child: Icon(
+            Icons.favorite,
+            color: Colors.greenAccent,
+            size: 50,
+          ),
+        ),
+      ],
+    );
+
+Widget buildFrontCard(BuildContext context) => GestureDetector();
 
 Widget buildMenuItems(BuildContext context) => Container(
       padding: const EdgeInsets.all(24),
