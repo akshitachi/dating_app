@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "351738810212",
+    "firebase_url": "https://challenge-as-default-rtdb.firebaseio.com",
     "project_id": "challenge-as",
     "storage_bucket": "challenge-as.appspot.com"
   },
