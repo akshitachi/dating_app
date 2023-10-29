@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:math';
+
 import 'package:auth_app/screens/matches_screen.dart';
 import 'package:auth_app/screens/message_screen.dart';
 import 'package:auth_app/screens/profile_screen.dart';
@@ -20,16 +22,19 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    Map userData = {};
+    List userData = [];
     return FutureBuilder(
         future: DataBaseService().getFirstUser(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             var snapshotData = snapshot.data;
             (snapshotData as Map).forEach((key, value) {
-              userData = value;
+              if (key != FirebaseAuth.instance.currentUser!.uid) {
+                userData.add(value);
+              }
             });
-
+            final random = Random();
+            int randomValue = random.nextInt(userData.length);
             return Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -101,13 +106,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: [
                           Expanded(
                             child: TinderCard(
-                              user: userData,
+                              user: userData[randomValue],
                             ),
                           ),
                           const SizedBox(
                             height: 16,
                           ),
-                          buildButtons(context, userData['uid']),
+                          buildButtons(context, userData[randomValue]['uid']),
                         ],
                       ),
                     ),

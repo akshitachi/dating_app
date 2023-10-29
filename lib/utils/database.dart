@@ -6,22 +6,16 @@ class DataBaseService {
   var user = FirebaseAuth.instance.currentUser;
 
   Future getUserDetails(String uid) async {
-    print(uid);
     var result = await database
         .child('Users')
         .child(uid)
         .get()
         .then((data) => data.value);
-    print(result);
     return result;
   }
 
   Future getFirstUser() async {
-    var result = await database
-        .child('Users')
-        .limitToFirst(1)
-        .get()
-        .then((data) => data.value);
+    var result = await database.child('Users').get().then((data) => data.value);
     return result;
   }
 
@@ -75,7 +69,6 @@ class DataBaseService {
           .child('matches')
           .set({useruid: true});
     }
-    print(result);
   }
 
   Future getMatches() async {
@@ -85,7 +78,6 @@ class DataBaseService {
         .child('matches')
         .get()
         .then((value) => value.value);
-    print(result);
     return result;
   }
 
