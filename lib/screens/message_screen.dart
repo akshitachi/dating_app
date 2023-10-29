@@ -51,7 +51,10 @@ class _MessageScreenState extends State<MessageScreen> {
                 });
           } else {
             return Center(
-              child: CircularProgressIndicator(),
+              child: Text(
+                'No messages :(',
+                style: TextStyle(color: Colors.black, fontSize: 23),
+              ),
             );
           }
         });

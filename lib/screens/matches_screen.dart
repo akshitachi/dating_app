@@ -42,7 +42,10 @@ class _MatchesScreenState extends State<MatchesScreen> {
           );
         } else {
           return Center(
-            child: CircularProgressIndicator(),
+            child: Text(
+              'No matches :(',
+              style: TextStyle(color: Colors.black, fontSize: 23),
+            ),
           );
         }
       },

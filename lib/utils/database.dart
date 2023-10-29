@@ -104,6 +104,20 @@ class DataBaseService {
         .child('liked')
         .child(userId)
         .remove();
+
+    await database
+        .child('Users')
+        .child(userId)
+        .child('matches')
+        .child(useruid)
+        .remove();
+    await database
+        .child('Users')
+        .child(useruid)
+        .child('matches')
+        .child(userId)
+        .remove();
+    await database.child('Chats').child(userId + useruid).remove();
   }
 
   Future getChatsforUser() async {
